@@ -1,0 +1,150 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-10-20T14:56:06Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 9215039103,
+  "lat": 19.2329576,
+  "lon": 72.9760606,
+  "tags": {
+    "amenity": "charging_station",
+    "capacity": "1",
+    "fee": "yes",
+    "name": "Fortum EV Charger",
+    "operator": "Fortum"
+  }
+},
+{
+  "type": "node",
+  "id": 9252505223,
+  "lat": 19.0245243,
+  "lon": 73.0135121,
+  "tags": {
+    "access": "yes",
+    "amenity": "charging_station",
+    "fee": "yes",
+    "name": "PowerGrid Charging Station",
+    "operator": "PowerGrid"
+  }
+},
+{
+  "type": "node",
+  "id": 10205648223,
+  "lat": 18.6433491,
+  "lon": 72.8762211,
+  "tags": {
+    "access": "yes",
+    "amenity": "charging_station",
+    "branch": "Hotel Chirag executive",
+    "capacity": "4",
+    "covered": "yes",
+    "fee": "yes",
+    "name": "Go e go",
+    "name:en": "Go e go"
+  }
+},
+{
+  "type": "node",
+  "id": 10285393622,
+  "lat": 18.9561767,
+  "lon": 73.1627884,
+  "tags": {
+    "access": "yes",
+    "amenity": "charging_station",
+    "brand": "Tata Power",
+    "capacity": "1",
+    "name": "Tata Power",
+    "operator": "Tata Power"
+  }
+},
+{
+  "type": "node",
+  "id": 10285406628,
+  "lat": 19.0874903,
+  "lon": 73.0796316,
+  "tags": {
+    "access": "yes",
+    "amenity": "charging_station",
+    "brand": "Jio-BP",
+    "capacity": "2",
+    "name": "Jio-BP",
+    "operator": "Jio-BP"
+  }
+},
+{
+  "type": "node",
+  "id": 10553764693,
+  "lat": 19.1597944,
+  "lon": 72.8582930,
+  "tags": {
+    "amenity": "charging_station",
+    "brand": "Tata power",
+    "charge": "₹21/kWh + GST",
+    "covered": "no",
+    "fee": "yes",
+    "manufacturer": "Delta",
+    "note": "25kW"
+  }
+},
+{
+  "type": "node",
+  "id": 10827297703,
+  "lat": 19.0671494,
+  "lon": 73.0075344,
+  "tags": {
+    "access": "yes",
+    "amenity": "charging_station",
+    "branch": "Pudhari substation",
+    "brand": "Delta",
+    "charge": "₹11/unit",
+    "fee": "yes",
+    "manufacturer": "Delta",
+    "name:en": "Mahavitaran charging station",
+    "name:mr": "महावितरण चार्जिंग स्थानक",
+    "operator": "Mahavitaran",
+    "source": "survey"
+  }
+},
+{
+  "type": "node",
+  "id": 13629431945,
+  "lat": 18.9048855,
+  "lon": 72.8046553,
+  "tags": {
+    "access": "permissive",
+    "amenity": "charging_station",
+    "check_date": "2026-03-09"
+  }
+},
+{
+  "type": "node",
+  "id": 14158954590,
+  "lat": 19.1463070,
+  "lon": 72.8336534,
+  "tags": {
+    "amenity": "charging_station",
+    "brand": "Honda",
+    "charging_station:battery_swapping": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 14197852532,
+  "lat": 19.1302336,
+  "lon": 72.8314106,
+  "tags": {
+    "amenity": "charging_station",
+    "charging_station:battery_swapping": "yes",
+    "covered": "yes",
+    "level": "0"
+  }
+}
+
+  ]
+}

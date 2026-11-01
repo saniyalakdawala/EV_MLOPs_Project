@@ -1,0 +1,44 @@
+VOLTGRID MUMBAI: DATASET QUALITY & AUDIT REPORT
+================================================================================
+
+1. RETRIEVED RECORDS PER SOURCE:
+   • OpenStreetMap_Overpass: 10 records
+   • OpenChargeMap: 1982 records
+   • NITI_Aayog_EAmrit: 159 records
+   ─────────────────────────────────────────────
+   TOTAL RAW RECORDS PROCESSED: 2151
+
+2. GEOGRAPHIC BOUNDARY CLASSIFICATION (Official MMR Polygon):
+   • Boundary Dataset: Mumbai Metropolitan Region (MMR) Official Administrative Boundary
+   • Boundary Source : OpenStreetMap / Nominatim (OSM Relation ID: 13312356)
+   • Valid Records Inside MMR Boundary: 18
+   • Quarantined Records Outside MMR  : 2133
+   • Invalid Coordinate Format Records : 0
+
+3. QUALITY & MANUAL REVIEW CANDIDATES:
+   • Flagged Generic/Missing Names    : 2
+   • Flagged Cross-Source Nearby (<50m): 0
+   • Exact Source ID Duplicates Skipped: 0
+
+4. FINAL MASTER DATASET METRICS:
+   • Approved Master Stations (master_ev_stations.csv): 16
+   • Pending Manual Survey (pending_stations.csv)     : 2
+   • Quarantined / Rejected (rejected_stations.csv)   : 2133
+
+5. MASTER DATASET ROSTER:
+   [VG-MUM-0001] Fortum EV Charger (Fortum) @ 19.232958, 72.976061 [OpenStreetMap:node/9215039103]
+   [VG-MUM-0002] PowerGrid Charging Station (PowerGrid) @ 19.024524, 73.013512 [OpenStreetMap:node/9252505223]
+   [VG-MUM-0003] Go e go (unknown) @ 18.643349, 72.876221 [OpenStreetMap:node/10205648223]
+   [VG-MUM-0004] Tata Power (Tata Power) @ 18.956177, 73.162788 [OpenStreetMap:node/10285393622]
+   [VG-MUM-0005] Jio-BP (Jio-BP) @ 19.087490, 73.079632 [OpenStreetMap:node/10285406628]
+   [VG-MUM-0006] Tata power (Tata power) @ 19.159794, 72.858293 [OpenStreetMap:node/10553764693]
+   [VG-MUM-0007] Mahavitaran (Mahavitaran) @ 19.067149, 73.007534 [OpenStreetMap:node/10827297703]
+   [VG-MUM-0008] Honda (Honda) @ 19.146307, 72.833653 [OpenStreetMap:node/14158954590]
+   [VG-MUM-0009] SEL Dev Maharashtra (Salzer NexCharge (IN)) @ 19.105321, 72.875887 [OpenChargeMap:OCM-510426]
+   [VG-MUM-0010] MobiLane Equinox Business Park ((Unknown Operator)) @ 19.071566, 72.877213 [OpenChargeMap:OCM-502290]
+   [VG-MUM-0011] MobiLane Saya Grand By Treat ((Unknown Operator)) @ 19.219162, 73.043920 [OpenChargeMap:OCM-502276]
+   [VG-MUM-0012] Andheri West ((Unknown Operator)) @ 19.116600, 72.829270 [OpenChargeMap:OCM-307102]
+   [VG-MUM-0013] Balasaheb Thackeray Flyover ((Unknown Operator)) @ 19.139951, 72.851974 [OpenChargeMap:OCM-298738]
+   [VG-MUM-0014] Cinemax ((Unknown Operator)) @ 19.243652, 73.134756 [OpenChargeMap:OCM-201254]
+   [VG-MUM-0015] Mira Road  ((Unknown Operator)) @ 19.140006, 72.853444 [OpenChargeMap:OCM-190068]
+   [VG-MUM-0016] Tata Power Receiving Station ((Business Owner at Location)) @ 19.095796, 72.926011 [OpenChargeMap:OCM-92772]

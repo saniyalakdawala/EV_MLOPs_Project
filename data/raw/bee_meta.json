@@ -1,0 +1,33 @@
+{
+  "dataset": "India public EV charging stations",
+  "attribution": "Data: Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India — \"EV Public Charging Stations Data till 26th October 2025\". Republished with attribution; not an official BEE service.",
+  "source": {
+    "publisher": "Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India",
+    "title": "EV Public Charging Stations Data till 26th October 2025",
+    "url": "http://beeindia.gov.in/WriteReadData/RTF1984/EV_PCS_Data_29277.pdf",
+    "page_url": "http://beeindia.gov.in/show_content.php?lang=1&level=2&ls_id=345&lid=67",
+    "snapshot_label": "till 26th October 2025",
+    "pdf_created": "2026-02-17",
+    "licence": "No licence is published by BEE for this file; republished with attribution.",
+    "sha256": "f519218fa96a04f57b3c56e919a8045133e7df1307a77710cca0076ab25b6882",
+    "size_bytes": 7942286,
+    "pages": 1159
+  },
+  "counts": {
+    "rows": 39641,
+    "stations": 29184,
+    "chargers": 39640,
+    "connectors": 44065,
+    "suspect_locations": 115,
+    "mixed_admin": 65,
+    "rejects": 1,
+    "states": 36,
+    "operators": 70
+  },
+  "not_provided": [
+    "real-time charger availability or status",
+    "pricing, payment or booking",
+    "opening hours"
+  ],
+  "data_notes": "https://github.com/shrinivas-sn/ev-charging-stations-api/blob/main/DOCS/DATA-NOTES.md"
+}

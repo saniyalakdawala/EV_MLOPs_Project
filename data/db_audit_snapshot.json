@@ -1,0 +1,1073 @@
+{
+  "postgis_version": "Error: function postgis_full_version() does not exist\nLINE 1: SELECT PostGIS_Full_Version();\n               ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.\n",
+  "tables": {
+    "charging_ports": 2026,
+    "charging_sessions": 12,
+    "charging_stations": 952,
+    "station_status_history": 2027,
+    "stg_charging_stations": 2141,
+    "stg_master_ev_stations": 16,
+    "stg_national_master_ev_stations": 30263
+  },
+  "columns": {
+    "charging_ports": [
+      {
+        "column": "port_id",
+        "type": "integer",
+        "nullable": "NO",
+        "default": "nextval('charging_ports_port_id_seq'::regclass)"
+      },
+      {
+        "column": "station_id",
+        "type": "integer",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "port_number",
+        "type": "integer",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "connector_type",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "power_kw",
+        "type": "numeric",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "status",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": "'AVAILABLE'::character varying"
+      },
+      {
+        "column": "updated_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES",
+        "default": "now()"
+      }
+    ],
+    "charging_sessions": [
+      {
+        "column": "session_id",
+        "type": "uuid",
+        "nullable": "NO",
+        "default": "gen_random_uuid()"
+      },
+      {
+        "column": "port_id",
+        "type": "integer",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "user_identifier",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "start_time",
+        "type": "timestamp with time zone",
+        "nullable": "NO",
+        "default": "now()"
+      },
+      {
+        "column": "end_time",
+        "type": "timestamp with time zone",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "energy_kwh",
+        "type": "numeric",
+        "nullable": "YES",
+        "default": "0.0"
+      },
+      {
+        "column": "session_status",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": "'ACTIVE'::character varying"
+      }
+    ],
+    "charging_stations": [
+      {
+        "column": "station_id",
+        "type": "integer",
+        "nullable": "NO",
+        "default": "nextval('charging_stations_station_id_seq'::regclass)"
+      },
+      {
+        "column": "station_name",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "operator_name",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "address",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "city",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "state",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "postal_code",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "latitude",
+        "type": "numeric",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "longitude",
+        "type": "numeric",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "source_name",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": "'OpenChargeMap'::character varying"
+      },
+      {
+        "column": "created_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES",
+        "default": "now()"
+      },
+      {
+        "column": "last_updated",
+        "type": "timestamp with time zone",
+        "nullable": "YES",
+        "default": "now()"
+      },
+      {
+        "column": "source_id",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_url",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_license",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "last_verified_at",
+        "type": "date",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "master_station_id",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      }
+    ],
+    "station_status_history": [
+      {
+        "column": "history_id",
+        "type": "bigint",
+        "nullable": "NO",
+        "default": "nextval('station_status_history_history_id_seq'::regclass)"
+      },
+      {
+        "column": "port_id",
+        "type": "integer",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "old_status",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "new_status",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "changed_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO",
+        "default": "now()"
+      },
+      {
+        "column": "reason",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      }
+    ],
+    "stg_charging_stations": [
+      {
+        "column": "staging_id",
+        "type": "bigint",
+        "nullable": "NO",
+        "default": "nextval('stg_charging_stations_staging_id_seq'::regclass)"
+      },
+      {
+        "column": "raw_station_id",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "station_name",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "operator_name",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "address",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "city",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "state",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "postal_code",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "latitude_raw",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "longitude_raw",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "connector_type",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "power_kw_raw",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "number_of_ports_raw",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_name",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": "'OpenChargeMap'::character varying"
+      },
+      {
+        "column": "ingested_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES",
+        "default": "now()"
+      },
+      {
+        "column": "validation_status",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": "'PENDING'::character varying"
+      },
+      {
+        "column": "validation_error",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      }
+    ],
+    "stg_master_ev_stations": [
+      {
+        "column": "master_id",
+        "type": "integer",
+        "nullable": "NO",
+        "default": "nextval('stg_master_ev_stations_master_id_seq'::regclass)"
+      },
+      {
+        "column": "station_id",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "station_name",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "operator",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "address",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "locality",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "city",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "latitude",
+        "type": "numeric",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "longitude",
+        "type": "numeric",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "connector_types",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "power_kw",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "access_type",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "operational_status",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_name",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_id",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_url",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_license",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "last_verified_at",
+        "type": "date",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "validation_status",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "imported_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES",
+        "default": "now()"
+      }
+    ],
+    "stg_national_master_ev_stations": [
+      {
+        "column": "station_id",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "station_name",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "operator",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "address",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "locality",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "city",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "state",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "latitude",
+        "type": "numeric",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "longitude",
+        "type": "numeric",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "connector_types",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "power_kw",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "access_type",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "operational_status",
+        "type": "character varying",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_name",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "source_id",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": null
+      },
+      {
+        "column": "source_url",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "source_license",
+        "type": "text",
+        "nullable": "YES",
+        "default": null
+      },
+      {
+        "column": "is_inside_mmr",
+        "type": "boolean",
+        "nullable": "NO",
+        "default": "false"
+      },
+      {
+        "column": "validation_status",
+        "type": "character varying",
+        "nullable": "NO",
+        "default": "'PENDING_REVIEW'::character varying"
+      },
+      {
+        "column": "staged_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES",
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "name": "charging_ports_pkey",
+      "type": "p",
+      "table": "charging_ports",
+      "definition": "PRIMARY KEY (port_id)"
+    },
+    {
+      "name": "charging_ports_station_id_fkey",
+      "type": "f",
+      "table": "charging_ports",
+      "definition": "FOREIGN KEY (station_id) REFERENCES charging_stations(station_id) ON DELETE CASCADE"
+    },
+    {
+      "name": "chk_connector_type",
+      "type": "c",
+      "table": "charging_ports",
+      "definition": "CHECK (((connector_type)::text = ANY ((ARRAY['CCS-2'::character varying, 'Type 2 AC'::character varying, 'CHAdeMO'::character varying, 'GB/T'::character varying, 'Bharat AC-001'::character varying, 'Bharat DC-001'::character varying])::text[])))"
+    },
+    {
+      "name": "chk_port_status",
+      "type": "c",
+      "table": "charging_ports",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['AVAILABLE'::character varying, 'IN_USE'::character varying, 'OUT_OF_SERVICE'::character varying, 'MAINTENANCE'::character varying])::text[])))"
+    },
+    {
+      "name": "chk_power_positive",
+      "type": "c",
+      "table": "charging_ports",
+      "definition": "CHECK ((power_kw > 0.0))"
+    },
+    {
+      "name": "uq_station_port_num",
+      "type": "u",
+      "table": "charging_ports",
+      "definition": "UNIQUE (station_id, port_number)"
+    },
+    {
+      "name": "charging_sessions_pkey",
+      "type": "p",
+      "table": "charging_sessions",
+      "definition": "PRIMARY KEY (session_id)"
+    },
+    {
+      "name": "charging_sessions_port_id_fkey",
+      "type": "f",
+      "table": "charging_sessions",
+      "definition": "FOREIGN KEY (port_id) REFERENCES charging_ports(port_id) ON DELETE RESTRICT"
+    },
+    {
+      "name": "chk_energy_positive",
+      "type": "c",
+      "table": "charging_sessions",
+      "definition": "CHECK ((energy_kwh >= 0.0))"
+    },
+    {
+      "name": "chk_session_status",
+      "type": "c",
+      "table": "charging_sessions",
+      "definition": "CHECK (((session_status)::text = ANY ((ARRAY['ACTIVE'::character varying, 'COMPLETED'::character varying, 'ABORTED'::character varying])::text[])))"
+    },
+    {
+      "name": "chk_session_times",
+      "type": "c",
+      "table": "charging_sessions",
+      "definition": "CHECK (((end_time IS NULL) OR (end_time >= start_time)))"
+    },
+    {
+      "name": "charging_stations_pkey",
+      "type": "p",
+      "table": "charging_stations",
+      "definition": "PRIMARY KEY (station_id)"
+    },
+    {
+      "name": "chk_latitude_range",
+      "type": "c",
+      "table": "charging_stations",
+      "definition": "CHECK (((latitude >= '-90.0'::numeric) AND (latitude <= 90.0)))"
+    },
+    {
+      "name": "chk_longitude_range",
+      "type": "c",
+      "table": "charging_stations",
+      "definition": "CHECK (((longitude >= '-180.0'::numeric) AND (longitude <= 180.0)))"
+    },
+    {
+      "name": "chk_hist_new_status",
+      "type": "c",
+      "table": "station_status_history",
+      "definition": "CHECK (((new_status)::text = ANY ((ARRAY['AVAILABLE'::character varying, 'IN_USE'::character varying, 'OUT_OF_SERVICE'::character varying, 'MAINTENANCE'::character varying])::text[])))"
+    },
+    {
+      "name": "station_status_history_pkey",
+      "type": "p",
+      "table": "station_status_history",
+      "definition": "PRIMARY KEY (history_id)"
+    },
+    {
+      "name": "station_status_history_port_id_fkey",
+      "type": "f",
+      "table": "station_status_history",
+      "definition": "FOREIGN KEY (port_id) REFERENCES charging_ports(port_id) ON DELETE CASCADE"
+    },
+    {
+      "name": "stg_charging_stations_pkey",
+      "type": "p",
+      "table": "stg_charging_stations",
+      "definition": "PRIMARY KEY (staging_id)"
+    },
+    {
+      "name": "stg_master_ev_stations_pkey",
+      "type": "p",
+      "table": "stg_master_ev_stations",
+      "definition": "PRIMARY KEY (master_id)"
+    },
+    {
+      "name": "stg_master_ev_stations_station_id_key",
+      "type": "u",
+      "table": "stg_master_ev_stations",
+      "definition": "UNIQUE (station_id)"
+    },
+    {
+      "name": "stg_national_master_ev_stations_pkey",
+      "type": "p",
+      "table": "stg_national_master_ev_stations",
+      "definition": "PRIMARY KEY (station_id)"
+    }
+  ],
+  "indexes": [
+    {
+      "table": "charging_ports",
+      "name": "charging_ports_pkey",
+      "definition": "CREATE UNIQUE INDEX charging_ports_pkey ON public.charging_ports USING btree (port_id)"
+    },
+    {
+      "table": "charging_ports",
+      "name": "idx_ports_connector_power",
+      "definition": "CREATE INDEX idx_ports_connector_power ON public.charging_ports USING btree (connector_type, power_kw)"
+    },
+    {
+      "table": "charging_ports",
+      "name": "idx_ports_status",
+      "definition": "CREATE INDEX idx_ports_status ON public.charging_ports USING btree (status)"
+    },
+    {
+      "table": "charging_ports",
+      "name": "uq_station_port_num",
+      "definition": "CREATE UNIQUE INDEX uq_station_port_num ON public.charging_ports USING btree (station_id, port_number)"
+    },
+    {
+      "table": "charging_sessions",
+      "name": "charging_sessions_pkey",
+      "definition": "CREATE UNIQUE INDEX charging_sessions_pkey ON public.charging_sessions USING btree (session_id)"
+    },
+    {
+      "table": "charging_sessions",
+      "name": "idx_sessions_port_status",
+      "definition": "CREATE INDEX idx_sessions_port_status ON public.charging_sessions USING btree (port_id, session_status)"
+    },
+    {
+      "table": "charging_sessions",
+      "name": "idx_sessions_start_time",
+      "definition": "CREATE INDEX idx_sessions_start_time ON public.charging_sessions USING btree (start_time DESC)"
+    },
+    {
+      "table": "charging_sessions",
+      "name": "uq_active_session_per_port",
+      "definition": "CREATE UNIQUE INDEX uq_active_session_per_port ON public.charging_sessions USING btree (port_id) WHERE ((session_status)::text = 'ACTIVE'::text)"
+    },
+    {
+      "table": "charging_stations",
+      "name": "charging_stations_pkey",
+      "definition": "CREATE UNIQUE INDEX charging_stations_pkey ON public.charging_stations USING btree (station_id)"
+    },
+    {
+      "table": "charging_stations",
+      "name": "idx_stations_lat_lon",
+      "definition": "CREATE INDEX idx_stations_lat_lon ON public.charging_stations USING btree (latitude, longitude)"
+    },
+    {
+      "table": "charging_stations",
+      "name": "idx_stations_point_gist",
+      "definition": "CREATE INDEX idx_stations_point_gist ON public.charging_stations USING gist (point((longitude)::double precision, (latitude)::double precision))"
+    },
+    {
+      "table": "charging_stations",
+      "name": "idx_stations_state_city",
+      "definition": "CREATE INDEX idx_stations_state_city ON public.charging_stations USING btree (state, city)"
+    },
+    {
+      "table": "station_status_history",
+      "name": "station_status_history_pkey",
+      "definition": "CREATE UNIQUE INDEX station_status_history_pkey ON public.station_status_history USING btree (history_id)"
+    },
+    {
+      "table": "stg_charging_stations",
+      "name": "stg_charging_stations_pkey",
+      "definition": "CREATE UNIQUE INDEX stg_charging_stations_pkey ON public.stg_charging_stations USING btree (staging_id)"
+    },
+    {
+      "table": "stg_master_ev_stations",
+      "name": "stg_master_ev_stations_pkey",
+      "definition": "CREATE UNIQUE INDEX stg_master_ev_stations_pkey ON public.stg_master_ev_stations USING btree (master_id)"
+    },
+    {
+      "table": "stg_master_ev_stations",
+      "name": "stg_master_ev_stations_station_id_key",
+      "definition": "CREATE UNIQUE INDEX stg_master_ev_stations_station_id_key ON public.stg_master_ev_stations USING btree (station_id)"
+    },
+    {
+      "table": "stg_national_master_ev_stations",
+      "name": "stg_national_master_ev_stations_pkey",
+      "definition": "CREATE UNIQUE INDEX stg_national_master_ev_stations_pkey ON public.stg_national_master_ev_stations USING btree (station_id)"
+    }
+  ],
+  "roles": [
+    {
+      "name": "postgres",
+      "superuser": true,
+      "inherit": true,
+      "createrole": true,
+      "createdb": true,
+      "canlogin": true
+    },
+    {
+      "name": "ev_admin",
+      "superuser": false,
+      "inherit": true,
+      "createrole": false,
+      "createdb": true,
+      "canlogin": true
+    },
+    {
+      "name": "ev_app_user",
+      "superuser": false,
+      "inherit": false,
+      "createrole": false,
+      "createdb": false,
+      "canlogin": true
+    },
+    {
+      "name": "ev_analyst",
+      "superuser": false,
+      "inherit": false,
+      "createrole": false,
+      "createdb": false,
+      "canlogin": true
+    }
+  ],
+  "triggers": [
+    {
+      "table": "charging_stations",
+      "name": "trg_stations_geom_update",
+      "event": "INSERT",
+      "statement": "EXECUTE FUNCTION trg_sync_station_geom()",
+      "timing": "BEFORE"
+    },
+    {
+      "table": "charging_ports",
+      "name": "trg_ports_status_audit",
+      "event": "INSERT",
+      "statement": "EXECUTE FUNCTION trg_log_port_status_change()",
+      "timing": "AFTER"
+    },
+    {
+      "table": "charging_stations",
+      "name": "trg_stations_geom_update",
+      "event": "UPDATE",
+      "statement": "EXECUTE FUNCTION trg_sync_station_geom()",
+      "timing": "BEFORE"
+    },
+    {
+      "table": "charging_ports",
+      "name": "trg_ports_status_audit",
+      "event": "UPDATE",
+      "statement": "EXECUTE FUNCTION trg_log_port_status_change()",
+      "timing": "AFTER"
+    }
+  ],
+  "sample_charging_stations": [
+    {
+      "id": 1,
+      "name": "SEL Dev Maharashtra",
+      "operator": "Salzer NexCharge (IN)",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.105321,
+      "lon": 72.875887,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 2,
+      "name": "MobiLane Equinox Business Park",
+      "operator": "(Unknown Operator)",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.071566,
+      "lon": 72.877213,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 3,
+      "name": "MobiLane Saya Grand By Treat",
+      "operator": "(Unknown Operator)",
+      "city": "Thane",
+      "state": "Maharashtra",
+      "lat": 19.219162,
+      "lon": 73.04392,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 4,
+      "name": "Andheri West",
+      "operator": "(Unknown Operator)",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.1166,
+      "lon": 72.82927,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 5,
+      "name": "Balasaheb Thackeray Flyover",
+      "operator": "(Unknown Operator)",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.139951,
+      "lon": 72.851974,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 6,
+      "name": "Cinemax",
+      "operator": "(Unknown Operator)",
+      "city": "Kalyan",
+      "state": "Maharashtra",
+      "lat": 19.243652,
+      "lon": 73.134756,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 7,
+      "name": "Mira Road",
+      "operator": "(Unknown Operator)",
+      "city": "Maharashtra",
+      "state": "Maharashtra",
+      "lat": 19.140006,
+      "lon": 72.853444,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 8,
+      "name": "Tata Power Receiving Station",
+      "operator": "(Business Owner at Location)",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.095796,
+      "lon": 72.926011,
+      "source": "OpenChargeMap"
+    },
+    {
+      "id": 17,
+      "name": "Fortum EV Charger",
+      "operator": "Fortum",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.232958,
+      "lon": 72.976061,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 18,
+      "name": "PowerGrid Charging Station",
+      "operator": "PowerGrid",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.024524,
+      "lon": 73.013512,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 19,
+      "name": "Go e go",
+      "operator": "Independent Operator",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 18.643349,
+      "lon": 72.876221,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 20,
+      "name": "Tata Power",
+      "operator": "Tata Power",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 18.956177,
+      "lon": 73.162788,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 21,
+      "name": "Jio-BP",
+      "operator": "Jio-BP",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.08749,
+      "lon": 73.079632,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 22,
+      "name": "Tata power",
+      "operator": "Tata power",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.159794,
+      "lon": 72.858293,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 23,
+      "name": "Mahavitaran",
+      "operator": "Mahavitaran",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.067149,
+      "lon": 73.007534,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 24,
+      "name": "Honda",
+      "operator": "Honda",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.146307,
+      "lon": 72.833653,
+      "source": "OpenStreetMap"
+    },
+    {
+      "id": 2834,
+      "name": "VILLAGE CHENDHARA",
+      "operator": "BPCL",
+      "city": "ALIBAG",
+      "state": "Maharashtra",
+      "lat": 18.652479,
+      "lon": 72.879107,
+      "source": "Bureau_of_Energy_Efficiency_BEE"
+    },
+    {
+      "id": 2835,
+      "name": "AT PEZARI",
+      "operator": "BPCL",
+      "city": "Alibaug",
+      "state": "Maharashtra",
+      "lat": 18.68827,
+      "lon": 72.980107,
+      "source": "Bureau_of_Energy_Efficiency_BEE"
+    },
+    {
+      "id": 2836,
+      "name": "Nine Palms",
+      "operator": "Tata Power",
+      "city": "Alibaug",
+      "state": "Maharashtra",
+      "lat": 18.760131,
+      "lon": 72.882514,
+      "source": "Bureau_of_Energy_Efficiency_BEE"
+    },
+    {
+      "id": 2837,
+      "name": "Midc East",
+      "operator": "KAZAM",
+      "city": "Ambernath",
+      "state": "Maharashtra",
+      "lat": 19.204718,
+      "lon": 73.195738,
+      "source": "Bureau_of_Energy_Efficiency_BEE"
+    }
+  ]
+}
