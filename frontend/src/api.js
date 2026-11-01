@@ -1,7 +1,7 @@
 /**
  * Central API Client for FastAPI Backend
  */
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+const BASE_URL = import.meta.env.VITE_API_URL || (window.location.port === '5173' ? 'http://127.0.0.1:8000' : '');
 
 export async function fetchOverview() {
   const res = await fetch(`${BASE_URL}/api/stations/overview`);
@@ -119,4 +119,25 @@ export async function fetchDbaBenchmark() {
   const res = await fetch(`${BASE_URL}/api/dba/benchmark`);
   if (!res.ok) throw new Error('Failed to fetch benchmark comparison');
   return res.json();
+}
+
+export async function fetchForecastModelInfo() {
+  const res = await fetch(`${BASE_URL}/api/forecast/model-info`);
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || 'No trained forecasting model is available.');
+  return res.json();
+}
+
+export async function fetchForecastEvaluation() {
+  const res = await fetch(`${BASE_URL}/api/forecast/evaluation`);
+  if (!res.ok) throw new Error('Forecast evaluation is unavailable.');
+  return res.json();
+}
+
+export async function requestForecast(payload) {
+  const res = await fetch(`${BASE_URL}/api/forecast/predict`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || `Forecast request failed (${res.status})`);
+  return data;
 }

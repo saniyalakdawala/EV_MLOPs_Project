@@ -1,0 +1,56 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        INCLUDE_XGBOOST: ${INCLUDE_XGBOOST:-false}
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      DEBUG: "false"
+      DB_HOST: host.docker.internal
+      DB_USER: ${DB_USER:?Set DB_USER in your local environment}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in your local environment}
+      FORECAST_MODEL_PATH: /app/models/current/model.joblib
+      FORECAST_LOG_PATH: /app/data/forecast/predictions.csv
+      FORECAST_ACTUALS_PATH: /app/data/forecast/actuals.csv
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    ports: ["8000:8000"]
+    volumes:
+      - ./backend/models:/app/models:ro
+      - ./data/forecast:/app/data/forecast
+      - ./data/mlflow:/app/data/mlflow
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      default:
+        aliases:
+          - voltgrid-api
+  frontend:
+    build: ./frontend
+    ports: ["5173:8080"]
+    depends_on: [backend, mlflow]
+  mlflow:
+    build:
+      context: ./backend
+    command: ["mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:////mlflow/mlflow.db", "--default-artifact-root", "/mlflow/artifacts"]
+    ports: ["5000:5000"]
+    volumes:
+      - ./data/mlflow:/mlflow
+  prometheus:
+    image: prom/prometheus:v2.53.3
+    ports: ["9090:9090"]
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on: [backend]
+  grafana:
+    image: grafana/grafana:11.4.0
+    ports: ["3000:3000"]
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in your local environment}
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/voltgrid.json
+    volumes:
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]

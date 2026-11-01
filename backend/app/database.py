@@ -27,18 +27,9 @@ def init_db_pool(minconn=2, maxconn=20):
             )
             print(f"[DB] Initialized ThreadedConnectionPool with {settings.DB_USER} on {settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}")
         except Exception as e:
-            print(f"[DB ERROR] Failed connecting as {settings.DB_USER}: {e}. Falling back to 'postgres' user...")
-            _pool = ThreadedConnectionPool(
-                minconn=minconn,
-                maxconn=maxconn,
-                host=settings.DB_HOST,
-                port=settings.DB_PORT,
-                dbname=settings.DB_NAME,
-                user="postgres",
-                password="postgres",
-                cursor_factory=RealDictCursor
-            )
-            print(f"[DB] Initialized fallback pool as 'postgres'")
+            _pool = None
+            print(f"[DB ERROR] Could not initialize configured PostgreSQL pool: {type(e).__name__}")
+            raise
     return _pool
 
 def close_db_pool():

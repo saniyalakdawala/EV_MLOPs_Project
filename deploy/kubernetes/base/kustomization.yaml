@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: voltgrid
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - model-pvc.yaml
+  - forecast-pvc.yaml
+  - api.yaml
+  - frontend.yaml
+  - hpa.yaml

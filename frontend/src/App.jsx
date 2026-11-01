@@ -7,6 +7,7 @@ import StationList from './components/StationList';
 import StationDetailModal from './components/StationDetailModal';
 import SessionHistoryView from './components/SessionHistoryView';
 import DbaOperationsPanel from './components/DbaOperationsPanel';
+import ForecastPanel from './components/ForecastPanel';
 import { fetchOverview, fetchStations, fetchNearbyStations, fetchStationDetail, fetchDbaStats } from './api';
 
 export default function App() {
@@ -334,6 +335,8 @@ export default function App() {
 
         {/* Tab 2: Operational Charging Sessions */}
         {activeTab === 'sessions' && <SessionHistoryView />}
+
+        {activeTab === 'forecast' && <ForecastPanel />}
 
         {/* Tab 3: DBA Operations, Diagnostics & Benchmarks */}
         {activeTab === 'dba' && <DbaOperationsPanel />}

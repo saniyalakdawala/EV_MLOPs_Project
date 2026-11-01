@@ -1,0 +1,17 @@
+{
+  "id": null,
+  "uid": "voltgrid-mlops",
+  "title": "VoltGrid Forecast Service",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "15s",
+  "time": {"from": "now-6h", "to": "now"},
+  "panels": [
+    {"id": 1, "title": "API requests / second", "type": "timeseries", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}, "targets": [{"expr": "sum by (path) (rate(voltgrid_http_requests_total[5m]))", "legendFormat": "{{path}}"}]},
+    {"id": 2, "title": "HTTP errors / second", "type": "timeseries", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}, "targets": [{"expr": "sum by (status) (rate(voltgrid_http_requests_total{status=~\"4..|5..\"}[5m]))", "legendFormat": "{{status}}"}]},
+    {"id": 3, "title": "Forecast latency p95", "type": "timeseries", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}, "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(voltgrid_forecast_latency_seconds_bucket[5m])))", "legendFormat": "p95"}]},
+    {"id": 4, "title": "Forecast requests / second", "type": "timeseries", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}, "targets": [{"expr": "sum by (result) (rate(voltgrid_forecast_requests_total[5m]))", "legendFormat": "{{result}}"}]},
+    {"id": 5, "title": "Delayed forecast MAE (kWh)", "type": "timeseries", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}, "targets": [{"expr": "voltgrid_forecast_delayed_accuracy_kwh{metric=\"mae\"}", "legendFormat": "{{model_version}}"}]},
+    {"id": 6, "title": "Delayed matched observations", "type": "timeseries", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}, "targets": [{"expr": "voltgrid_forecast_delayed_matched_observations", "legendFormat": "{{model_version}}"}]}
+  ]
+}

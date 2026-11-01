@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voltgrid-api
+  namespace: voltgrid
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: voltgrid-api
+  template:
+    metadata:
+      labels:
+        app: voltgrid-api
+    spec:
+      securityContext:
+        fsGroup: 10001
+      containers:
+        - name: api
+          image: voltgridacr.azurecr.io/voltgrid-api:replace-me
+          ports:
+            - name: http
+              containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: voltgrid-config
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: voltgrid-secrets
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: voltgrid-secrets
+                  key: db-password
+            - name: MLFLOW_TRACKING_URI
+              valueFrom:
+                secretKeyRef:
+                  name: voltgrid-secrets
+                  key: mlflow-tracking-uri
+                  optional: true
+          volumeMounts:
+            - name: models
+              mountPath: /models
+              readOnly: true
+            - name: forecast-logs
+              mountPath: /var/forecast
+          readinessProbe:
+            httpGet:
+              path: /api/forecast/ready
+              port: http
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/forecast/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 10001
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: voltgrid-models
+        - name: forecast-logs
+          persistentVolumeClaim:
+            claimName: voltgrid-forecast-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voltgrid-api
+  namespace: voltgrid
+spec:
+  selector:
+    app: voltgrid-api
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

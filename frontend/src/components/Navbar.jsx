@@ -1,10 +1,11 @@
 import React from 'react';
-import { Zap, Database, MapPin, Activity, ShieldCheck, History } from 'lucide-react';
+import { Zap, Database, MapPin, Activity, History, TrendingUp } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, onRefresh, isRefreshing }) {
   const tabs = [
     { id: 'map', label: 'GIS Map & Stations', icon: MapPin },
     { id: 'sessions', label: 'Charging Sessions', icon: History },
+    { id: 'forecast', label: 'Demand Forecast', icon: TrendingUp },
     { id: 'dba', label: 'DBA Operations & Health', icon: Database },
   ];
 
@@ -22,10 +23,10 @@ export default function Navbar({ activeTab, setActiveTab, onRefresh, isRefreshin
               <div className="flex items-center space-x-2">
                 <span className="font-bold text-lg text-white tracking-tight">VoltGrid Mumbai</span>
                 <span className="text-xs bg-emerald-500/20 text-emerald-400 font-medium px-2 py-0.5 rounded-full border border-emerald-500/30">
-                  ADBMS GIS & DBA Track
+                  GIS, DBA & Forecasting
                 </span>
               </div>
-              <p className="text-xs text-slate-400 hidden sm:block">Smart EV Infrastructure Database (PostgreSQL & PostGIS)</p>
+              <p className="text-xs text-slate-400 hidden sm:block">Smart EV Infrastructure & Demand Forecasting</p>
             </div>
           </div>
 

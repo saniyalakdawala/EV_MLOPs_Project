@@ -1,0 +1,13 @@
+# Reproducible backend + forecasting environment (Python 3.12 recommended).
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+psycopg2-binary==2.9.10
+pydantic==2.11.4
+python-dotenv==1.1.0
+numpy==2.2.6
+pandas==2.2.3
+scikit-learn==1.6.1
+scipy==1.15.3
+joblib==1.5.1
+mlflow==2.22.0
+prometheus-client==0.22.0

@@ -1,9 +1,20 @@
 # Environment & Secrets
 .env
+.env.*
+!.env.example
+!**/.env.example
 __pycache__/
 *.py[cod]
 *$py.class
 *.env
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+*.dump
+*.backup
+*.bak
 
 # Dependencies
 node_modules/
@@ -20,6 +31,36 @@ yarn-error.log*
 # PostGIS extracted binary cache (large zip)
 data/postgis_extracted/
 data/*.zip
+data/forecast_demo/
+data/forecast/
+data/forecast_datasets/
+data/acn_sessions*.csv
+data/hourly_actuals*.csv
+data/mlflow/
+backend/models/
+*.joblib
+*.pickle
+*.pkl
+*.onnx
+*.pt
+*.pth
+*.h5
+*.keras
+mlruns/
+mlartifacts/
+mlflow.db
+mlflow.db-shm
+mlflow.db-wal
+.pytest_cache/
+.coverage
+.pytest-tmp/
+.ruff_cache/
+.mypy_cache/
+.tox/
+.venv/
+venv/
+htmlcov/
+.recovery/
 
 # IDE & OS
 .vscode/

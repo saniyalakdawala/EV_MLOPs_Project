@@ -1,0 +1,38 @@
+name: Publish VoltGrid images to ACR (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require successful CI for this commit
+        run: gh run list --workflow ci.yml --commit "$GITHUB_SHA" --json conclusion --jq 'any(.[]; .conclusion == "success")' | grep -qx true
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - run: az acr login --name "$ACR_NAME"
+        env:
+          ACR_NAME: ${{ vars.ACR_NAME }}
+      - name: Build and push API image
+        run: |
+          docker build --build-arg INCLUDE_XGBOOST="${INCLUDE_XGBOOST:-false}" -f backend/Dockerfile -t "$ACR_LOGIN_SERVER/voltgrid-api:$GITHUB_SHA" ./backend
+          docker push "$ACR_LOGIN_SERVER/voltgrid-api:$GITHUB_SHA"
+        env:
+          ACR_LOGIN_SERVER: ${{ vars.ACR_LOGIN_SERVER }}
+          INCLUDE_XGBOOST: ${{ vars.INCLUDE_XGBOOST }}
+      - name: Build and push frontend image
+        run: |
+          docker build -f frontend/Dockerfile -t "$ACR_LOGIN_SERVER/voltgrid-frontend:$GITHUB_SHA" ./frontend
+          docker push "$ACR_LOGIN_SERVER/voltgrid-frontend:$GITHUB_SHA"
+        env:
+          ACR_LOGIN_SERVER: ${{ vars.ACR_LOGIN_SERVER }}
