@@ -14,14 +14,14 @@ This checklist details every required piece of empirical evidence, SQL output, t
 | **`[FIG-04]`** | Spatial Point-in-Polygon Boundary Filter Terminal Log | VS Code Terminal | **Executed & Verified** | Run `python scripts/test_pipeline_boundary_filter.py`. Take screenshot showing 11/11 tests passed and 2,133 non-MMR records quarantined. |
 | **`[FIG-05]`** | Spatial Radius Search (5 km of BKC) Query & Result | pgAdmin 4 | **Executed & Verified** | Run Query 3.1 in `docs/ADBMS_SQL_EVIDENCE.sql`. Capture query editor and the 5 returned stations. |
 | **`[FIG-06]`** | Nearest Station to Gateway of India (Colaba) Query & Result | pgAdmin 4 | **Executed & Verified** | Run Query 3.2 in `docs/ADBMS_SQL_EVIDENCE.sql`. Capture query editor showing Taj Mahal Palace at 0.15 km. |
-| **`[FIG-07]`** | Interactive Map with MMR Stations & Radius Coverage | Web Browser | **Ready to Capture** | Open `http://localhost:5173`. Search "Bandra West", select 10 km radius. Capture map with cluster pins and radius circle. |
+| **`[FIG-07]`** | Station Explorer & MMR Map | Web Browser | **Ready to Capture** | Open `http://localhost:8501`, choose **Station explorer**, run a 10 km nearby search for Bandra West, and capture results and map points. |
 | **`[FIG-08]`** | ACID Transaction & Rollback Proof (Zero Dirty Data) | pgAdmin / Terminal | **Executed & Verified** | Run `python scripts/test_transactions.py` or execute Scenario 3 in `database/05_transactions.sql`. Capture notices showing `ROLLBACK`. |
 | **`[FIG-09]`** | Concurrency Control (Row Lock & Conflict Resolution) | VS Code Terminal | **Executed & Verified** | Run `python scripts/test_concurrency.py`. Capture output showing Alice acquiring lock and Bob receiving `409 Conflict / REJECTED`. |
 | **`[FIG-10]`** | Query Optimizer Execution Plan (`EXPLAIN ANALYZE`) | pgAdmin 4 | **Executed & Verified** | Run Query 6.2 and 6.3 in `docs/ADBMS_SQL_EVIDENCE.sql`. Capture pgAdmin Graphical Explain Plan or text output. |
 | **`[FIG-11]`** | Role-Based Access Control (RBAC Permission Denied) | pgAdmin / Terminal | **Executed & Verified** | Run `python scripts/test_security.py`. Capture `permission denied for table charging_ports` for `ev_analyst`. |
 | **`[FIG-12]`** | Buffer Cache Hit Ratio & Storage Sizing Query | pgAdmin 4 | **Executed & Verified** | Run Query 8.1 & 8.2 in `docs/ADBMS_SQL_EVIDENCE.sql`. Capture result showing 99.85% cache hit and table sizes. |
 | **`[FIG-13]`** | Logical Backup Table of Contents (`pg_restore -l`) | VS Code Terminal | **Executed & Verified** | Run `& "C:\Program Files\PostgreSQL\17\bin\pg_restore.exe" -l data/ev_db_backup.dump`. Capture output showing archived tables. |
-| **`[FIG-14]`** | Live DBA Operations Dashboard Panel | Web Browser | **Ready to Capture** | In the frontend (`http://localhost:5173`), toggle the *DBA Operations Panel*. Capture the cache hit chart and active sessions. |
+| **`[FIG-14]`** | Live DBA Operations Dashboard | Web Browser | **Ready to Capture** | In Streamlit (`http://localhost:8501`), choose **Database**. Capture live cache and table statistics. |
 
 ---
 
@@ -117,10 +117,10 @@ This checklist details every required piece of empirical evidence, SQL output, t
 
 ### Screenshot 7: Web Application Interactive Map `[FIG-07]`
 1. Launch the backend: double-click `run_backend.bat` (starts FastAPI on port 8000).
-2. Launch the frontend: double-click `run_frontend.bat` (starts Vite on port 5173).
-3. Open `http://localhost:5173` in Google Chrome or Edge.
-4. In the search bar, search for "Bandra West", select a 10 km radius.
-5. Capture the browser window displaying the interactive Leaflet map, station markers, and the station cards list.
+2. Launch the dashboard with `streamlit run streamlit_app.py` from the project root.
+3. Open `http://localhost:8501` in Google Chrome or Edge.
+4. Choose **Station explorer** and run a nearby search for Bandra West with a 10 km radius.
+5. Capture the results table and station map.
 6. Save as: `docs/screenshots/fig07_webapp_map_interface.png`.
 
 ---
@@ -205,7 +205,7 @@ This checklist details every required piece of empirical evidence, SQL output, t
 ---
 
 ### Screenshot 14: WebApp DBA Operations Dashboard `[FIG-14]`
-1. Open the VoltGrid web application in your browser (`http://localhost:5173`).
+1. Open the VoltGrid Streamlit dashboard in your browser (`http://localhost:8501`).
 2. Click the **DBA Operations** button on the top navigation bar.
 3. Capture the dashboard panel showing:
    - Database health metrics (cache hit percentage, database size).

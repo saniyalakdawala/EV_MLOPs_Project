@@ -2,7 +2,7 @@
 
 ## Design decision
 
-Demand forecasting is an additive capability inside VoltGrid. The existing React/Vite application, FastAPI process, PostgreSQL/PostGIS schema, station routes, GIS search, and DBA pages remain the system of record and user interface. Forecast endpoints are added to the existing backend and use a separate forecasting module so ML dependencies and business logic remain isolated without adding a second web service.
+Demand forecasting is an additive capability inside VoltGrid. The Streamlit app in `streamlit_app.py` is the user interface. It calls the existing FastAPI process for PostgreSQL/PostGIS-backed station routes, GIS search, DBA pages, and forecast inference. Forecast endpoints use a separate module so training logic stays outside the dashboard.
 
 ## Data and target
 
@@ -20,6 +20,6 @@ The existing FastAPI process loads a locally configured, validated artifact and 
 
 ## Operations
 
-Local development uses the existing backend and frontend, with optional MLflow, Prometheus, and Grafana services in Docker Compose. Docker and Kubernetes configuration is additive. GitHub Actions performs offline checks, tests, frontend build, and container build; Azure publish/deploy jobs are gated by repository variables and secrets. ACR/AKS configuration is documented and checked in but is not provisioned or deployed by this change.
+Local development runs Streamlit and the existing backend, with optional MLflow, Prometheus, and Grafana services in Docker Compose. PostgreSQL/PostGIS remains a locally managed service and is not initialized by Compose. GitHub Actions runs backend and Streamlit smoke tests plus local container builds; it does not publish or deploy. Streamlit Community Cloud is a future option that needs a separately reachable API and database, plus external persistence for model and prediction files.
 
 Prediction records carry their timestamp and model version. Delayed outcomes can later be submitted to a separate forecast-observations file/store for evaluation; no accuracy is reported until actual outcomes arrive. Prediction distribution drift uses a two-sample Kolmogorov-Smirnov test when at least 20 baseline and recent predictions exist. Feature drift remains unmeasured until an observed feature feed is connected. Drift is descriptive, not evidence of accuracy loss, and does not automatically promote or deploy models. Training writes unique candidate artifacts; the explicit promotion command rejects synthetic data, gates on validation MAE, and blocks comparisons across differing dataset fingerprints.

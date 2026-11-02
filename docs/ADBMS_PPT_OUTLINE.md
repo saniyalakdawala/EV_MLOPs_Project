@@ -140,7 +140,7 @@
   - **Storage Footprint:** Monitored via `pg_class` (Stations: 896 kB, Ports: 888 kB, Staging: 1,304 kB).
   - **Active Sessions:** Live diagnostic connection tracking via `pg_stat_activity`.
 - **System Architecture:**
-  - `React + Leaflet Frontend (port 5173)` $\longleftrightarrow$ `FastAPI REST API (port 8000)` $\longleftrightarrow$ `PostgreSQL 17 Database (port 5432)`.
+  - `Streamlit Dashboard (port 8501)` $\longleftrightarrow$ `FastAPI REST API (port 8000)` $\longleftrightarrow$ `PostgreSQL 17 Database (port 5432)`.
   - Live features: Interactive radius circle, dynamic station cards, real-time port booking modal, and DBA operations diagnostics panel.
 
 ---

@@ -1,6 +1,10 @@
+.env
+.venv/
 __pycache__/
 *.py[cod]
-.env
-models/
-data/
+tests/
 .pytest_cache/
+models/
+*.joblib
+*.pkl
+*.pickle

@@ -12,7 +12,7 @@
 * **Title:** VoltGrid Mumbai: Smart EV Charging Infrastructure Database
 * **Subtitle:** Spatial Modeling, Concurrency Control, and DBA Operations for Urban EV Networks
 * **Primary Track:** **Track C — GIS-Based Database**
-* **Technical Stack:** PostgreSQL 17 (x64), PostGIS 3.6.2, Python FastAPI, React + Leaflet, psycopg2
+* **Technical Stack:** PostgreSQL 17 (x64), PostGIS, Python FastAPI, Streamlit dashboard, psycopg2
 * **Key Theme:** Demonstrating what an Enterprise Database Administrator (DBA) does behind the scenes to collect, validate, store, query, secure, optimize, and recover urban spatial infrastructure data.
 
 ---
@@ -146,7 +146,7 @@
   * **Active Connections:** Live connection and query tracking via `pg_stat_activity`.
   * **Storage Footprint:** Monitored via `pg_class` (Stations: 896 kB, Ports: 888 kB, Staging: 1,304 kB).
 * **Full-Stack Application Flow:**
-  * `React + Leaflet Frontend (port 5173)` $\longleftrightarrow$ `FastAPI Backend (port 8000)` $\longleftrightarrow$ `PostgreSQL 17 / PostGIS (port 5432)`.
+  * `Streamlit Dashboard (port 8501)` $\longleftrightarrow$ `FastAPI Backend (port 8000)` $\longleftrightarrow$ `PostgreSQL 17 / PostGIS (port 5432)`.
   * Features: Interactive radius slider, dynamic station cards, simulated port booking modal, and live DBA diagnostic panel.
 
 ---

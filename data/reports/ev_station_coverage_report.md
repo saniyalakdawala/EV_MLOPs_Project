@@ -202,7 +202,7 @@ Government communications and press statements (e.g. BEE announcements, NITI Aay
 To ensure zero risk to active production operations:
 1. **Production Table Preservation:** Existing production tables `charging_stations` (16 rows) and `charging_ports` (18 rows) remain completely untouched and locked against unapproved modifications.
 2. **Staging Isolation:** The full national dataset (30,263 rows) has been ingested into a dedicated staging table: `stg_national_master_ev_stations` (947 rows flagged `is_inside_mmr = TRUE`).
-3. **Application Scope Filter:** The FastAPI backend and React frontend are configured to default to `scope=mmr` (guaranteeing that users searching in Mumbai only see authentic MMR stations), while providing a toggle for `scope=all` to search all 30,263 national stations. Nearest-station queries strictly respect the selected scope.
+3. **Application Scope Filter:** The FastAPI backend and Streamlit dashboard default to `scope=mmr`, while providing a national staging option with `scope=all`. Nearest-station queries strictly respect the selected scope.
 
 ---
 

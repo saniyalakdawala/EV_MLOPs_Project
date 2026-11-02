@@ -24,9 +24,9 @@
 * **Talking Point**:
   > "In the GIS track, we model station coordinates using WGS-84 decimal latitude and longitude as well as PostGIS geography(Point, 4326). Unlike Euclidean planes, spherical geography calculates exact geodesic distances in meters."
 * **Action**:
-  - Open the React frontend (`http://localhost:5173`) on the **GIS Map & Stations** tab.
-  - Drag the search radius slider to 10 km from BKC Mumbai (`19.0657, 72.8687`).
-  - Click on a green station pin on the map (e.g. *MobiLane Equinox Business Park*).
+  - Open the Streamlit dashboard (`http://localhost:8501`) and choose **Station explorer**.
+  - Use the nearby search for BKC Mumbai (`19.0657, 72.8687`) with a 10 km radius.
+  - Review the returned station rows and map points.
   - Open pgAdmin and run [`database/04_spatial_queries.sql`](file:///c:/Projects/ADBMS/database/04_spatial_queries.sql) to show the underlying SQL executing `ST_DWithin` and `<->` KNN operator.
 
 ---
@@ -36,7 +36,7 @@
 * **Talking Point**:
   > "A major DBA responsibility in high-traffic networks is preventing race conditions where two drivers simultaneously tap 'Book' on the same physical dispenser. We use pessimistic row-level locking with `SELECT ... FOR UPDATE`."
 * **Action**:
-  - In the UI Station Detail modal, click **Start Charging** on an available port.
+  - Open **Charging sessions**, choose **Start a session**, load available ports, and start a session on an available port.
   - Point out that the port status transitions immediately to **`IN_USE`** and an active charging session is created.
   - Now run the concurrency test script in terminal:
     ```powershell
@@ -56,10 +56,8 @@
 * **Talking Point**:
   > "We implemented B-Tree indexes on port status, composite hardware attributes `(connector_type, power_kw)`, and session start times. We used `EXPLAIN (ANALYZE, BUFFERS)` to measure actual execution plans."
 * **Action**:
-  - Switch to the **DBA Operations & Health** tab in the dashboard.
-  - Show the benchmark card:
-    - **With B-Tree Index**: `0.672 ms` (Bitmap Index Scan on `idx_ports_connector_power`)
-    - **Without Index**: `1.307 ms` (Sequential Scan on `charging_ports`)
+  - Choose **Database** in the dashboard and run the index query-plan benchmark.
+  - Read the execution timings returned by the configured database; timings depend on data and environment.
   - Run the terminal script:
     ```powershell
     python scripts/test_indexes.py
@@ -77,7 +75,7 @@
     python scripts/test_security.py
     ```
   - Show PostgreSQL output: `permission denied for table charging_ports`.
-  - In the dashboard, show the **Buffer Cache Hit Ratio Meter** (`99.98%`) and the **Table Storage Size Bar Chart**.
+  - In the dashboard, show the live buffer cache ratio and table storage values returned by PostgreSQL.
   - Show the physical backup file created: `data/ev_db_backup.dump` (348 KB custom-format dump created via `pg_dump -Fc`).
 
 ---
@@ -85,11 +83,15 @@
 ## 2. Quick Command Cheat-Sheet for Demo Day
 
 ```powershell
-# 1. Start Backend Server (Terminal 1)
-.\run_backend.bat
+# 1. Start FastAPI backend (Terminal 1)
+Set-Location C:\Projects\EV_Charging\backend
+..\.venv\Scripts\Activate.ps1
+python -m app.main
 
-# 2. Start Frontend UI (Terminal 2)
-.\run_frontend.bat
+# 2. Start Streamlit dashboard (Terminal 2)
+Set-Location C:\Projects\EV_Charging
+\.venv\Scripts\Activate.ps1
+streamlit run streamlit_app.py
 
 # 3. Quick Test Scripts (Terminal 3)
 python scripts/test_constraints.py    # Verify all 5 check & unique constraints

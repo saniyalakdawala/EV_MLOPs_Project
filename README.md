@@ -9,16 +9,43 @@
 
 ## 1. Project Overview
 
-**VoltGrid Mumbai** is a production-grade, database-driven spatial application engineered to manage electric vehicle (EV) charging stations across Mumbai, Maharashtra, and India. Unlike simple CRUD applications, this project is built to demonstrate **how a senior Database Administrator (DBA) maintains consistency, transactional atomicity, concurrency control, spatial indexing performance, and disaster recovery** in a mission-critical infrastructure database.
+**VoltGrid Mumbai** is an academic EV charging infrastructure application for exploring station data, spatial searches, database operations, and demand forecasting. It demonstrates transactions, concurrency control, spatial indexing, and recovery workflows; production security and service levels have not been independently established.
 
 ### Technology Stack
 * **Database Engine**: PostgreSQL 17.5
 * **Spatial System**: PostGIS (`geography(Point, 4326)`) and native PostgreSQL GiST spatial indexing (`point(longitude, latitude)`)
 * **Database Administration**: pgAdmin 4 & SQL command-line tools
-* **Backend API**: Python 3.13 + FastAPI, psycopg2 connection pooling, Pydantic v2
-* **Frontend Dashboard**: React 19 + Vite 8 + Leaflet GIS mapping + Vanilla CSS design system
-* **Geocoding & Location**: OpenStreetMap Nominatim with caching, rate-limiting, and debounced place autocomplete
-* **Data Processing**: Python 3.13 ETL pipeline with spatial deduplication (<30m)
+* **Backend API**: Python 3.11 + FastAPI, psycopg2 connection pooling, Pydantic v2
+* **Dashboard**: Streamlit with station exploration, database diagnostics, sessions, and forecast views
+* **Geocoding & Location**: OpenStreetMap Nominatim with caching, rate-limiting, and a curated offline fallback index
+* **Data Processing**: Python ETL pipeline with spatial deduplication (<30m)
+
+---
+
+## Local architecture
+
+```mermaid
+flowchart LR
+  User --> UI[Streamlit dashboard :8501]
+  UI --> API[FastAPI :8000]
+  API --> DB[(PostgreSQL + PostGIS)]
+  API --> Model[Local forecast artifact]
+  Trainer[Forecast CLI] --> Model
+  Trainer --> MLflow[MLflow :5000]
+  API --> Prom[Prometheus :9090]
+  Prom --> Grafana[Grafana :3000]
+```
+
+The dashboard calls the existing API, which owns station and DBA queries, spatial search, and model inference. The API does not create or migrate the database. Training runs only when explicitly invoked from the CLI.
+
+The dashboard includes overview counts and a station map, filtered and nearby station search, charging session history and transactional controls, database storage diagnostics and an on-demand query-plan benchmark, plus trained-model evaluation and forecasting. Results are read from the API; an unavailable database or missing model is shown as such.
+
+### Main project areas
+
+* `streamlit_app.py`, `requirements.txt`, `.streamlit/`: active dashboard and its runtime configuration.
+* `backend/app/`: FastAPI routes, PostgreSQL connection handling, and forecasting pipeline.
+* `database/`, `scripts/`: existing schema, DBA examples, setup, and data workflows.
+* `deploy/prometheus/`, `deploy/grafana/`: local monitoring configuration.
 
 ---
 
@@ -26,12 +53,12 @@
 
 | Rubric Component | Marks | Technical Implementation | Core Evidence / Deliverable |
 | :--- | :--- | :--- | :--- |
-| **Dataset & Real-World Problem** | **1.5** | Real OpenChargeMap & NITI Aayog geodata; 2,141 staged records filtered into 1,951 normalized stations (119 in MH, 9 authentic stations in core Mumbai MMR) with 30m spatial deduplication. | [`data/raw/`](file:///c:/Projects/ADBMS/data/raw/), [`docs/dataset_documentation.md`](file:///c:/Projects/ADBMS/docs/dataset_documentation.md), [`scripts/ingest_pipeline.py`](file:///c:/Projects/ADBMS/scripts/ingest_pipeline.py) |
-| **Database Design** | **2.0** | Third Normal Form (3NF) relational design; foreign keys with `CASCADE` & `RESTRICT`; check constraints; **partial unique index preventing concurrent double-bookings**. | [`database/01_schema.sql`](file:///c:/Projects/ADBMS/database/01_schema.sql), [`database/02_constraints.sql`](file:///c:/Projects/ADBMS/database/02_constraints.sql), [`docs/er_diagram.md`](file:///c:/Projects/ADBMS/docs/er_diagram.md) |
-| **ADBMS Core Track (GIS)** | **3.0** | Spatial indexing via GiST; radius searches with bounding-box pruning; KNN nearest-neighbor; exact geodesic distance calculation. | [`database/04_spatial_queries.sql`](file:///c:/Projects/ADBMS/database/04_spatial_queries.sql), [`backend/app/routers/stations.py`](file:///c:/Projects/ADBMS/backend/app/routers/stations.py), [`frontend/src/components/MapView.jsx`](file:///c:/Projects/ADBMS/frontend/src/components/MapView.jsx) |
-| **SQL Queries & Concurrency** | **1.5** | Multi-threaded race condition demonstration with pessimistic row-level locking (`SELECT ... FOR UPDATE`); ACID rollback verification. | [`database/05_transactions.sql`](file:///c:/Projects/ADBMS/database/05_transactions.sql), [`database/06_concurrency.sql`](file:///c:/Projects/ADBMS/database/06_concurrency.sql), [`scripts/test_concurrency.py`](file:///c:/Projects/ADBMS/scripts/test_concurrency.py) |
-| **DBA Responsibilities** | **1.0** | Role-Based Access Control (Admin, App, Analyst) with least privilege; `pg_stat_activity` session inspector; custom-format compressed backup (`pg_dump -Fc`). | [`database/08_security.sql`](file:///c:/Projects/ADBMS/database/08_security.sql), [`database/09_monitoring.sql`](file:///c:/Projects/ADBMS/database/09_monitoring.sql), [`database/10_backup_recovery.md`](file:///c:/Projects/ADBMS/database/10_backup_recovery.md) |
-| **Report, Presentation & Viva** | **1.0** | 12-slide academic presentation outline, comprehensive viva examiner question bank, and live demonstration guide. | [`docs/presentation_slides.md`](file:///c:/Projects/ADBMS/docs/presentation_slides.md), [`docs/viva_preparation.md`](file:///c:/Projects/ADBMS/docs/viva_preparation.md), [`docs/demo_guide.md`](file:///c:/Projects/ADBMS/docs/demo_guide.md) |
+| **Dataset & Real-World Problem** | **1.5** | Real OpenChargeMap & NITI Aayog geodata; 2,141 staged records filtered into 1,951 normalized stations (119 in MH, 9 authentic stations in core Mumbai MMR) with 30m spatial deduplication. | [`data/raw/`](data/raw/), [`docs/dataset_documentation.md`](docs/dataset_documentation.md), [`scripts/ingest_pipeline.py`](scripts/ingest_pipeline.py) |
+| **Database Design** | **2.0** | Third Normal Form (3NF) relational design; foreign keys with `CASCADE` & `RESTRICT`; check constraints; **partial unique index preventing concurrent double-bookings**. | [`database/01_schema.sql`](database/01_schema.sql), [`database/02_constraints.sql`](database/02_constraints.sql), [`docs/er_diagram.md`](docs/er_diagram.md) |
+| **ADBMS Core Track (GIS)** | **3.0** | Spatial indexing via GiST; radius searches with bounding-box pruning; KNN nearest-neighbor; exact geodesic distance calculation. | `database/04_spatial_queries.sql`, `backend/app/routers/stations.py`, `streamlit_app.py` |
+| **SQL Queries & Concurrency** | **1.5** | Multi-threaded race condition demonstration with pessimistic row-level locking (`SELECT ... FOR UPDATE`); ACID rollback verification. | [`database/05_transactions.sql`](database/05_transactions.sql), [`database/06_concurrency.sql`](database/06_concurrency.sql), [`scripts/test_concurrency.py`](scripts/test_concurrency.py) |
+| **DBA Responsibilities** | **1.0** | Role-Based Access Control (Admin, App, Analyst) with least privilege; `pg_stat_activity` session inspector; custom-format compressed backup (`pg_dump -Fc`). | [`database/08_security.sql`](database/08_security.sql), [`database/09_monitoring.sql`](database/09_monitoring.sql), [`database/10_backup_recovery.md`](database/10_backup_recovery.md) |
+| **Report, Presentation & Viva** | **1.0** | 12-slide academic presentation outline, comprehensive viva examiner question bank, and live demonstration guide. | [`docs/presentation_slides.md`](docs/presentation_slides.md), [`docs/viva_preparation.md`](docs/viva_preparation.md), [`docs/demo_guide.md`](docs/demo_guide.md) |
 
 ---
 
@@ -58,66 +85,103 @@ When searching for a location such as **Tardeo, Mumbai**, the system previously 
 ## 4. Quick Start Guide (Windows)
 
 ### Prerequisites
-1. **PostgreSQL 17** installed and running on `localhost:5432`. Configure local credentials in the ignored `backend/.env` file; never commit it.
-2. **Python 3.10+** (verified on Python 3.13).
-3. **Node.js 18+** (verified on Node.js v22.18).
+1. PostgreSQL with the existing project schema and data; enable PostGIS where the spatial SQL requires it.
+2. Python 3.11 and a virtual environment (`venv`).
+3. Docker Desktop is optional for the containerized local stack.
 
 ---
 
-### Step 1: Database Setup & Data Ingestion (One-Time)
-Run these commands in PowerShell:
+### Step 1: Install local application dependencies
+
+From the repository root in PowerShell:
+
 ```powershell
-# 1. Create the database ev_db
-python scripts/init_db.py
-
-# 2. Deploy the 3NF schema, tables, triggers, and constraints
-python scripts/deploy_schema.py
-
-# 3. Optional: inspect the ingestion script before running it.
-# WARNING: this legacy academic pipeline truncates the operational tables before loading.
-# Do not run it against a database containing records you need to preserve.
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -r backend/requirements-dev.txt
 ```
 
-The legacy schema deployment also drops and recreates its tables. Keep backups and use an isolated database for demonstrations; these setup scripts are not safe production migrations.
+The root requirements install the Streamlit dashboard. The backend requirements install FastAPI, PostgreSQL access, the ML pipeline, MLflow, and test tools. The declared package versions support Python 3.11; Python 3.11 is not installed in the current verification environment, so the tests here ran with Python 3.13.
+
+If PowerShell blocks activation, enable it only for the current terminal session:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Copy `backend/.env.example` to `backend/.env` if that file does not already exist, then configure the local PostgreSQL connection. The real `.env` file is ignored by Git. Database initialization is a separate, one-time task:
+
+```powershell
+if (!(Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
+python scripts/init_db.py
+python scripts/deploy_schema.py
+```
+
+**Caution:** the existing schema deployment drops and recreates project tables; it is not a safe migration and must only be run for a new or disposable database. It is not run automatically by Streamlit or Docker Compose.
+
+### Step 2: Start the existing API and Streamlit dashboard
+
+Terminal 1:
+
+```powershell
+Set-Location C:\Projects\EV_Charging\backend
+..\.venv\Scripts\Activate.ps1
+python -m app.main
+```
+
+Terminal 2:
+
+```powershell
+Set-Location C:\Projects\EV_Charging
+\.venv\Scripts\Activate.ps1
+streamlit run streamlit_app.py
+```
+
+Open `http://localhost:8501`. The FastAPI API and documentation are at `http://127.0.0.1:8000` and `http://127.0.0.1:8000/docs`. Streamlit calls `http://127.0.0.1:8000` by default; set `VOLTGRID_API_URL` to override it. Station and database pages show unavailable states when the API or database cannot be reached. PostgreSQL/PostGIS and the project schema/data must be available for database-backed pages.
+
+For a one-click local launch after setup, run `start_all.bat`. It starts the two services with the root `.venv` and opens the dashboard.
 
 ---
 
-### Step 2: Run the Verification Suite
+### Step 3: Run the Verification Suite
 Execute the automated Python test suite to verify all DBA operations and location searches:
 ```powershell
-# ADBMS Core Track Verification
-python scripts/test_constraints.py        # 5/5 Integrity constraints & check guards
-python scripts/test_transactions.py       # Atomic commit & simulated rollback proof
-python scripts/test_concurrency.py        # Live race condition & row locking (SELECT ... FOR UPDATE)
-python scripts/test_indexes.py            # EXPLAIN ANALYZE comparison (0.508ms vs 0.947ms)
-python scripts/test_security.py           # Role permissions & least privilege RBAC
-python scripts/test_monitoring.py         # 99.29% cache hit ratio & active connection PIDs
+# ADBMS Core Track verification (requires the configured live database)
+python scripts/test_constraints.py
+python scripts/test_transactions.py
+python scripts/test_concurrency.py
+python scripts/test_indexes.py
+python scripts/test_security.py
+python scripts/test_monitoring.py
 
 # Location Search & Tardeo Regression Verification
-python scripts/test_tardeo_regression.py  # Mandatory Tardeo regression test (3km vs 15km)
-python scripts/test_location_search_suite.py # 10/10 location search & geocoding test cases
+python scripts/test_tardeo_regression.py
+python scripts/test_location_search_suite.py
 ```
 
-Forecasting and API smoke tests use pytest without a live database. From the backend directory, run `python -m pytest tests -q`. Frontend checks are `npm run lint` and `npm run build` from the frontend directory. The database-backed scripts above require the configured PostgreSQL/PostGIS database and seeded project data.
+Forecasting, API, and Streamlit smoke tests use pytest without a live database. With the virtual environment active, run `Set-Location backend; python -m pytest tests -q`. Database-backed scripts require the configured PostgreSQL/PostGIS database and project data.
 
 ---
 
-### Step 3: Launch the Full-Stack Application
+### Optional: Run the local container stack
 
-**Terminal 1 — Backend Server:**
 ```powershell
-.\run_backend.bat
-# Running at http://127.0.0.1:8000
-# Swagger API docs at http://127.0.0.1:8000/docs
+if (!(Test-Path .env)) { Copy-Item .env.example .env }
+# Edit .env with local PostgreSQL and Grafana passwords
+docker compose up --build -d backend streamlit
+# Add optional MLflow, Prometheus, and Grafana services:
+docker compose --profile observability up --build -d
+docker compose ps
+docker compose logs -f streamlit backend
+docker compose down
+docker compose up --build -d backend streamlit
 ```
 
-**Terminal 2 — Frontend Dashboard:**
-```powershell
-.\run_frontend.bat
-# Running at http://localhost:5173
-```
+Streamlit is at `http://localhost:8501` and API docs at `http://localhost:8000/docs`. With the `observability` profile enabled, MLflow is at `http://localhost:5000`, Prometheus at `http://localhost:9090`, and Grafana at `http://localhost:3000`. Compose connects the API to PostgreSQL/PostGIS already running on the host; it does not initialize a database. Experiment and Grafana state use persistent Docker volumes; forecast logs use the ignored local `data/forecast/` directory.
 
-Open your browser to: **`http://localhost:5173`**
+For Docker-to-host PostgreSQL connections, the database must listen on an interface reachable by Docker and allow the local Docker network in `pg_hba.conf`. Keep that access scoped to the local machine/network and use the app database role.
 
 ---
 
@@ -215,7 +279,7 @@ If two users request the same port simultaneously, the second transaction is pla
 
 ## 8. VoltGrid Demand Forecasting and MLOps Extension
 
-The forecasting capability extends this React/FastAPI application. It does not replace the GIS station explorer, session pages, or DBA tools. The integration design is documented in [`docs/forecasting_architecture.md`](docs/forecasting_architecture.md).
+The forecasting capability extends the existing FastAPI service and is available in the Streamlit dashboard. It does not replace the GIS station and DBA functionality. The integration design is documented in [`docs/forecasting_architecture.md`](docs/forecasting_architecture.md).
 
 ### Data provenance and forecast target
 
@@ -225,12 +289,10 @@ The initial target is **session-arrival-associated hourly energy (kWh)**: each s
 
 ### Local training
 
-Use Python 3.12 and a virtual environment from PowerShell:
+Use the root Python 3.11 virtual environment. From `backend/` in PowerShell:
 
 ```powershell
-cd backend
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
+..\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements-dev.txt
 ```
 
@@ -271,14 +333,13 @@ Promotion rejects synthetic data, requires candidate validation MAE to match or 
 For local MLflow tracking and model registry, start the local services and point training at the MLflow server:
 
 ```powershell
-$env:DB_USER = "your-local-db-user"
-$env:DB_PASSWORD = Read-Host "Local PostgreSQL password"
-$env:GRAFANA_ADMIN_PASSWORD = Read-Host "Local Grafana password"
-docker compose up --build -d mlflow prometheus grafana backend frontend
+if (!(Test-Path .env)) { Copy-Item .env.example .env }
+# Edit .env with your local DB_USER, DB_PASSWORD, and GRAFANA_ADMIN_PASSWORD.
+docker compose --profile observability up --build -d mlflow prometheus grafana backend streamlit
 $env:MLFLOW_TRACKING_URI = "http://localhost:5000"
 ```
 
-Training logs parameters, dataset fingerprint, split metrics, and the model bundle to MLflow; model registration is attempted when the configured tracking server supports a registry. Open MLflow at `http://localhost:5000`, Prometheus at `http://localhost:9090`, Grafana at `http://localhost:3000`, the API docs at `http://localhost:8000/docs`, and VoltGrid at `http://localhost:5173`. The backend connects to the existing PostgreSQL service on the host; it does not create or migrate a database.
+Training logs parameters, dataset fingerprint, split metrics, and the model bundle to MLflow when `MLFLOW_TRACKING_URI` is set; registration is attempted when supported. Open MLflow at `http://localhost:5000`, Prometheus at `http://localhost:9090`, Grafana at `http://localhost:3000`, API docs at `http://localhost:8000/docs`, and VoltGrid at `http://localhost:8501`. Compose connects the backend to the existing PostgreSQL service on the host and does not create or migrate a database.
 
 Forecast routes are `GET /api/forecast/health`, `GET /api/forecast/ready`, `GET /api/forecast/model-info`, `GET /api/forecast/evaluation`, `POST /api/forecast/predict`, `GET /api/forecast/monitoring/drift`, and `GET /api/forecast/monitoring/accuracy`; Prometheus scrapes `GET /metrics`. The forecast tab stays in an unavailable state when no model artifact exists. Forecast requests must use the last complete observed hour from the model metadata and a known site ID. The API records forecast timestamp and model version. No accuracy is claimed until actual future observations are supplied.
 
@@ -290,18 +351,21 @@ python -m app.forecasting.cli delayed-eval --forecasts ..\data\forecast\predicti
 
 For delayed monitoring, place validated hourly actuals in `data/forecast/actuals.csv` with columns `site_id,timestamp,actual_kwh`. The API joins outcomes to recorded forecasts in UTC, keeps the most recent forecast for each site-hour, and publishes MAE/RMSE/bias per model version only for matched observations. The prediction-drift utility uses a two-sample Kolmogorov-Smirnov test when the reference and recent output distributions both contain at least 20 values. Drift is only a distribution-change signal and does not prove accuracy loss. The API reports that data drift is awaiting observations until a real feature feed is connected. Retraining and promotion are manual; drift does not deploy a model.
 
-### Containers, Kubernetes, CI, and Azure
+### Containers and CI
 
-`docker-compose.yml` provides local backend/frontend, MLflow, Prometheus, and Grafana. The Compose file assumes the existing PostgreSQL service is available on the host; it does not initialize the legacy schema. Create a model artifact before expecting `/api/forecast/ready` to succeed.
+The root `Dockerfile` runs Streamlit. `backend/Dockerfile` runs FastAPI. Compose also starts MLflow, Prometheus, and Grafana; PostgreSQL remains a host prerequisite. Persistent named volumes store MLflow and Grafana data. No database initialization or model training runs on startup. Create and review a model artifact before expecting `/api/forecast/ready` to succeed.
 
-Kubernetes manifests live in `deploy/kubernetes/`. They include deployment/service resources, probes, resource limits, HPA, configuration, secret references, and PVCs for model artifacts and forecast logs. Supply environment-specific DB settings, a Kubernetes Secret named `voltgrid-secrets`, ACR image names, and a trained model in the model PVC before rollout. The Azure overlay uses Azure Files CSI. The frontend proxies `/api` to the backend service. If a candidate uses XGBoost, set the GitHub `INCLUDE_XGBOOST` variable to `true` before manually publishing the API image; the default container omits that optional dependency.
+GitHub Actions runs backend tests, Streamlit smoke tests, and local image builds. It does not publish images or deploy services. Docker and optional local monitoring remain available; no cloud deployment configuration is part of this setup.
 
-GitHub Actions CI runs Python tests, frontend lint/build, and Docker build checks without Azure credentials. Manual ACR publishing and AKS rollout workflows use OIDC and a protected `production` GitHub Environment. Configure Azure federated credentials and environment approval rules in GitHub before use. No workflow provisions Azure resources. A Kubernetes `LoadBalancer` service can incur Azure charges; review cost and resource settings before applying the Azure overlay. Azure configuration is **not deployed or verified** by this repository setup.
+### Streamlit Community Cloud preparation
+
+The repository entry point is `streamlit_app.py`, and root `requirements.txt` lists only the dashboard runtime dependencies. A future Community Cloud deployment still needs a reachable, externally hosted VoltGrid API and database; `localhost` and the current host database are not reachable from Community Cloud. Configure `VOLTGRID_API_URL` in Streamlit secrets after the API is hosted securely. The current API has no authentication, so do not expose it publicly until access controls and transport security are added. The current model artifact and prediction log are local files and are not persistent Community Cloud storage. No public deployment has been configured or performed.
 
 ### Current limitations
 
-- The local PostgreSQL database was unavailable during this implementation, so existing DB-backed routes and live DB integration were not verified.
+- Database-backed routes require a configured local PostgreSQL/PostGIS service and are not covered by the isolated unit tests.
 - No ACN token or export was provided; any model metrics from the synthetic demo are labelled demonstration-only.
 - ACN geography and workplace charging patterns do not validate Mumbai station demand.
 - Hourly targets allocate whole-session energy to connection hour; measured hourly delivery requires trustworthy interval meter data.
-- Docker, Kubernetes, MLflow server, Azure authentication, ACR, and AKS deployment require local tools/credentials and are not claimed as verified until explicitly run.
+- Community Cloud hosting requires a separately hosted API and database, plus a deliberate persistent artifact/log strategy.
+- Docker, MLflow server, Prometheus, and Grafana require their local tools and are only verified when run in the target environment.

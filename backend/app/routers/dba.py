@@ -6,6 +6,7 @@ and query execution plans for demonstration in the dashboard.
 from typing import Dict, Any, List
 from fastapi import APIRouter
 from app.database import get_db_connection
+from app.config import settings
 
 router = APIRouter(prefix="/api/dba", tags=["DBA Operations"])
 
@@ -25,8 +26,8 @@ def get_dba_system_statistics() -> Dict[str, Any]:
                 blks_read, blks_hit,
                 round((blks_hit * 100.0) / nullif(blks_hit + blks_read, 0), 2) AS cache_hit_pct
             FROM pg_stat_database 
-            WHERE datname = 'ev_db';
-            """)
+            WHERE datname = %s;
+            """, (settings.DB_NAME,))
             cache_row = cur.fetchone()
 
             # 2. Storage footprints
@@ -46,15 +47,15 @@ def get_dba_system_statistics() -> Dict[str, Any]:
             tables_storage = cur.fetchall()
 
             # 3. Total DB Size
-            cur.execute("SELECT pg_size_pretty(pg_database_size('ev_db')) AS db_size;")
+            cur.execute("SELECT pg_size_pretty(pg_database_size(%s)) AS db_size;", (settings.DB_NAME,))
             db_size = cur.fetchone()['db_size']
 
             return {
-                "database_name": "ev_db",
+                "database_name": settings.DB_NAME,
                 "total_size": db_size,
-                "cache_hit_percentage": float(cache_row['cache_hit_pct'] or 100.0),
-                "blocks_read_disk": int(cache_row['blks_read'] or 0),
-                "blocks_hit_memory": int(cache_row['blks_hit'] or 0),
+                "cache_hit_percentage": float(cache_row['cache_hit_pct']) if cache_row and cache_row['cache_hit_pct'] is not None else None,
+                "blocks_read_disk": int(cache_row['blks_read']) if cache_row and cache_row['blks_read'] is not None else None,
+                "blocks_hit_memory": int(cache_row['blks_hit']) if cache_row and cache_row['blks_hit'] is not None else None,
                 "tables_storage": [dict(t) for t in tables_storage]
             }
 

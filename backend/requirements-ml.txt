@@ -1,4 +1,4 @@
-# Reproducible backend + forecasting environment (Python 3.12 recommended).
+# Reproducible backend + forecasting environment (Python 3.11 supported).
 fastapi==0.115.12
 uvicorn[standard]==0.34.2
 psycopg2-binary==2.9.10
@@ -11,3 +11,4 @@ scipy==1.15.3
 joblib==1.5.1
 mlflow==2.22.0
 prometheus-client==0.22.0
+shapely==2.1.1

@@ -102,7 +102,7 @@ During thorough codebase and data auditing, the root cause was traced to two key
    - Queries for candidate names ("Adani Charging Station", "Jio-bp pulse", "Tata Power Charging Station") near Tardeo, Tulsiwadi, Arya Nagar, and Bane Compound confirmed they do **not** exist in the imported raw datasets.
    - In strict compliance with academic and engineering integrity standards, no artificial or guessed stations were hardcoded into Tardeo.
 3. **Honest Empty State**:
-   - When searching "Tardeo, Mumbai" at a realistic local radius of 3.0 km or 5.0 km, the API and frontend return **0 stations** honestly and present a clear notice:
+   - When searching "Tardeo, Mumbai" at a realistic local radius of 3.0 km or 5.0 km, the API and Streamlit dashboard return **0 stations** honestly and present a clear notice:
      `"No charging stations found within 3 km of Tardeo, Mumbai. Try expanding your search radius."`
    - Kurla West is strictly excluded at <= 5 km and is only returned when the user deliberately expands their radius to >= 13 km, where it is transparently identified as an outlying station at 12.67 km in Kurla West.
 

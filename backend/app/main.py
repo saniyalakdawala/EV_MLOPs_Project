@@ -3,31 +3,33 @@ FastAPI Main Application Entry Point
 Smart EV Charging Infrastructure Database Backend
 """
 from contextlib import asynccontextmanager
+import logging
 import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
-from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from app.config import settings
+from app.config import validate_settings
 from app.database import init_db_pool, close_db_pool
 from app.routers import stations, sessions, dba, geocoding, forecast
-
-HTTP_REQUESTS = Counter("voltgrid_http_requests_total", "HTTP requests", ["method", "path", "status"])
-HTTP_LATENCY = Histogram("voltgrid_http_request_duration_seconds", "HTTP request duration", ["method", "path"])
+from app.metrics import HTTP_LATENCY, HTTP_REQUESTS
+logger = logging.getLogger("voltgrid")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Initialize Database Connection Pool
-    print("[SERVER STARTUP] Initializing database pool...")
+    logging.basicConfig(level=logging.DEBUG if settings.DEBUG else logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+    validate_settings()
+    logger.info("Starting VoltGrid API; initializing database pool")
     try:
         init_db_pool()
     except Exception as exc:
         # Keep the app (and forecast API) available when the optional local DB is offline.
         # Database-backed routes will retry through their connection helper when called.
-        print(f"[DB WARNING] Database pool unavailable at startup ({type(exc).__name__}); database routes may be unavailable.")
+        logger.warning("Database pool unavailable at startup (%s); database routes may be unavailable", type(exc).__name__)
     yield
     # Shutdown: Close Database Connection Pool
-    print("[SERVER SHUTDOWN] Closing database pool...")
+    logger.info("Stopping VoltGrid API; closing database pool")
     close_db_pool()
 
 app = FastAPI(
@@ -39,11 +41,11 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configure Cross-Origin Resource Sharing (CORS) for React frontend
+# Configure cross-origin access for local browser clients.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow local React Vite dev server
-    allow_credentials=True,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
